@@ -27,7 +27,7 @@ int main() {
         case 10: cout << "October" << endl; break;
         case 11: cout << "November" << endl; break;
         case 12: cout << "December" << endl; break;
-        default: cout << "Invalid! Enter 1-12." << endl; // Handle invalid input
+        default: cout << "Invalid! Enter 1-12." << endl;
     }
 
     return 0;
