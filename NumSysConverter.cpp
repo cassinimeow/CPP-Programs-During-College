@@ -48,10 +48,10 @@ int main() {
     }
     while (decimalNumber > 0) {
         octalNumber = to_string(decimalNumber % 8) + octalNumber;
-        decimalNumber / 8;
+        decimalNumber /= 8;
     }
 
-    cout << "\nOctal Number: " << octalNumber << endl;
+    cout << "Octal Number: " << octalNumber << endl;
 
     return 0;
 }
