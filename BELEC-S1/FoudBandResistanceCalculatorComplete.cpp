@@ -3,45 +3,29 @@
 #include <map>
 #include <string>
 #include <algorithm>
-#include <iomanip>
 
 using namespace std;
 
-// Function to format large numbers with commas
-string formatWithCommas(double value) {
-    ostringstream oss;
-    oss.imbue(locale(""));
-    oss << fixed << setprecision(0) << value;
-    return oss.str();
-}
-
-// Function to format floats, removing unnecessary ".00"
-string formatFloat(double value) {
-    ostringstream oss;
-    if (value == static_cast<int>(value)) {
-        oss << fixed << setprecision(0) << value; // No decimals if whole number
-    } else {
-        oss << fixed << setprecision(2) << value; // Show decimals if necessary
-    }
-    return oss.str();
-}
-
-void resistorCalculator() {
+void resistorCalculator() 
+{
     // Define color mappings
-    map<string, int> digit = {
+    map<string, int> digit = 
+    {
         {"black", 0}, {"brown", 1}, {"red", 2}, {"orange", 3},
         {"yellow", 4}, {"green", 5}, {"blue", 6}, {"violet", 7},
         {"grey", 8}, {"white", 9}
     };
 
-    map<string, double> multiplier = {
+    map<string, double> multiplier = 
+    {
         {"black", 1}, {"brown", 10}, {"red", 100}, {"orange", 1000},
         {"yellow", 10000}, {"green", 100000}, {"blue", 1000000},
         {"violet", 10000000}, {"grey", 100000000}, {"white", 1000000000},
-        {"gold", 0.1}, {"silver", 0.01}
+        {"gold", 0.1}, {"silver", 0.1}
     };
 
-    map<string, double> tolerance = {
+    map<string, double> tolerance = 
+    {
         {"brown", 1}, {"red", 2}, {"green", 0.5}, {"blue", 0.25},
         {"violet", 0.1}, {"grey", 0.05}, {"gold", 5}, {"silver", 10}, {"none", 20}
     };
@@ -49,19 +33,22 @@ void resistorCalculator() {
     cout << "\nEnter 4 color names separated by spaces (e.g., Blue Green Blue Yellow), or type 'exit' to quit:\n";
 
     string line;
-    while (getline(cin, line)) {
+    while (getline(cin, line)) 
+    {
         if (line == "exit")
             break;
 
         istringstream iss(line);
         string col1, col2, col3, col4;
-        if (!(iss >> col1 >> col2 >> col3 >> col4)) {
+        if (!(iss >> col1 >> col2 >> col3 >> col4)) 
+        {
             cout << "Invalid input. Please enter exactly 4 color names.\n";
             continue;
         }
 
         // Convert input to lowercase
-        auto toLower = [](string s) {
+        auto toLower = [](string s) 
+        {
             transform(s.begin(), s.end(), s.begin(), ::tolower);
             return s;
         };
@@ -73,7 +60,8 @@ void resistorCalculator() {
 
         // Validate colors
         if (digit.find(col1) == digit.end() || digit.find(col2) == digit.end() ||
-            multiplier.find(col3) == multiplier.end() || tolerance.find(col4) == tolerance.end()) {
+            multiplier.find(col3) == multiplier.end() || tolerance.find(col4) == tolerance.end()) 
+        {
             cout << "One or more color names are invalid. Please try again.\n";
             continue;
         }
@@ -88,31 +76,35 @@ void resistorCalculator() {
         double value = ((d1 * 10) + d2) * mult;
         double kiloOhms = value / 1000.0;
 
-        // Display results
-        cout << "1st and 2nd Digits: " << (d1 * 10 + d2) << "\n"
-             << "Multiplier: " << formatFloat(mult) << " (" << col3  << ")\n"
-             << "Calculated Resistance = " << formatWithCommas(value) << " Ω";
-
+        // Display results with full precision
+        cout << " " <<d1 << "    " << d2 << "   " << mult << "  " << tol << "%\n\n"
+             << "[NOMINAL AND TOLERANCE]\n" << (d1 * 10 + d2) << " x " << mult << "\n"
+             << "NOMINAL VALUE = " << value << " Ω";
+             
         // Show kΩ only if value is ≥ 1,000 Ω
-        if (value >= 1000) {
-            cout << " (" << formatFloat(kiloOhms) << " kΩ)";
+        if (value >= 1000) 
+        {
+            cout << " (" << kiloOhms << " kΩ)";
         }
 
-        cout << " (±" << formatFloat(tol) << "%)\n";
+        cout << "\nTOLERANCE = ±" << tol << "%\n\n";
 
-        // **Automatically Calculate Min & Max Resistance**
+        // Automatically Calculate Min & Max Resistance
         double factor = tol / 100.0;
         double minResistance = value * (1 - factor);
         double maxResistance = value * (1 + factor);
 
-        cout << "Min Resistance: " << formatFloat(minResistance) << " Ω\n"
-             << "Max Resistance: " << formatFloat(maxResistance) << " Ω\n\n";
+        cout << "[MIN]\n" << value  << " - (" << (tol / 100.0) << " x " << value << ")\n"
+             << "Min Resistance: " << minResistance << " Ω\n\n[MAX]\n"
+             << value  << " + (" << (tol / 100.0) << " x " << value << ")\n"
+             << "Max Resistance: " << maxResistance << " Ω\n\n";
 
-        cout << "Enter next colors or type 'exit' to quit:\n";
+        cout << "-----------------------------------------\nEnter next colors or type 'exit' to quit:\n";
     }
 }
 
-int main() {
+int main() 
+{
     cout << "==== RESISTOR COLOR CODE CALCULATOR ====\n";
     resistorCalculator();
     cout << "Goodbye!\n";
