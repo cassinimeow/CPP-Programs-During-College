@@ -2,10 +2,11 @@
 
 using namespace std;
 
-int main() {
+int main() 
+{
     // DECLARATION (Store user input)
-    int registrants;
-    int fee_per_person, total_fee;
+    
+    int fee_per_person, total_fee, registrants;
 
     // HEADER (Display title)
     cout << "\n:: SEMINAR FEE CALCULATOR ::" << endl;
@@ -22,14 +23,19 @@ int main() {
     cin >> registrants;
     
     // CHECK AND DISPLAY (Determine fee per person and total amount)
-    if (registrants <= 0) {
+    if (registrants <= 0) 
+    {
         cout << "Invalid input. Number of registrants must be at least 1." << endl;
-    } else {
-        if (registrants >= 1 && registrants <= 4) {
+    } else 
+    {
+        if (registrants >= 1 && registrants <= 4) 
+        {
             fee_per_person = 500;
-        } else if (registrants >= 5 && registrants <= 10) {
+        } else if (registrants >= 5 && registrants <= 10) 
+        {
             fee_per_person = 400;
-        } else {
+        } else 
+        {
             fee_per_person = 300;
         }
         total_fee = registrants * fee_per_person;
