@@ -1,0 +1,10 @@
+# Ignore all files
+*
+
+# Allow folders
+!*/
+
+# Allow .cpp files
+!*.cpp
+
+tempCodeRunnerFile.cpp
