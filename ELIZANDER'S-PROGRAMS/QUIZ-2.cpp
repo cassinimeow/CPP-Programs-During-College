@@ -3,34 +3,33 @@ using namespace std;
 
 void monthlySales(){
     int mSales;
-    double percentage;
     double income;
     cout<<"Enter your monthly sales: ";
     cin>>mSales;
 
     if(mSales >= 50000){
-        percentage = 0.16;
-        income = 375 + (percentage * mSales);
+        double percentageOne = 0.16;
+        income = 375 + (percentageOne * mSales);
         cout<<"Income: "<<income;
-    } else if(mSales < 50000 || mSales >= 40000){
-        percentage = 0.14;
-        income = 350 + (percentage * mSales);
+    } else if(mSales < 50000 && mSales >= 40000){
+        double percentageTwo = 0.14;
+        income = 350 + (percentageTwo * mSales);
         cout<<"Income: "<<income;
-    } else if(mSales < 40000 || mSales >= 30000){
-        percentage = 0.12;
-        income = 325 + (percentage * mSales);
+    } else if(mSales < 40000 && mSales >= 30000){
+        double percentageThree = 0.12;
+        income = 325 + (percentageThree * mSales);
         cout<<"Income: "<<income;
-    } else if(mSales < 30000 || mSales >= 20000){
-        percentage = 0.09;
-        income = 300 + (percentage * mSales);
+    } else if(mSales < 30000 && mSales >= 20000){
+        double percentageFour = 0.09;
+        income = 300 + (percentageFour * mSales);
         cout<<"Income: "<<income;
-    } else if(mSales < 20000 || mSales >= 10000){
-        percentage = 0.05;
-        income = 250 + (percentage * mSales);
+    } else if(mSales < 20000 && mSales >= 10000){
+        double percentageFive = 0.05;
+        income = 250 + (percentageFive * mSales);
         cout<<"Income: "<<income;
     } else if(mSales < 10000){
-        percentage = 0.03;
-        income = 200 + (percentage * mSales);
+        double percentageSix = 0.03;
+        income = 200 + (percentageSix * mSales);
         cout<<"Income: "<<income;
     }
     cout<<"\n\nProgrammer's Name: Elizander Aguila, DIT 1-3";
@@ -64,6 +63,7 @@ int main(){
             case 'N':
             case 'n':
                 cout<<"Seminar Fee: 20\n";
+            break;
             default:
                 cout<<"Invalid Status!\n";
             }
