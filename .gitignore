@@ -10,4 +10,8 @@ tempCodeRunnerFile.cpp
 
 # Allow .md files
 !*.md
+!README
+
+# Allow other programs
+!*.html
 

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Circuit Calculator</title>
+    <!-- Include Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Include MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+        input {
+            width: 100px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 5px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+        }
+        #mdRendered {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Parallel Circuit Calculator</h1>
+    <form id="circuitForm">
+        <label for="R1">R1 (Ohms):</label>
+        <input type="number" id="R1" name="R1" step="any" required><br>
+        <label for="R2">R2 (Ohms):</label>
+        <input type="number" id="R2" name="R2" step="any" required><br>
+        <label for="R3">R3 (Ohms):</label>
+        <input type="number" id="R3" name="R3" step="any" required><br>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="output">
+        <div id="mdRendered"></div>
+    </div>
+    <script>
+        // Function to format numbers to 7 significant digits, removing trailing zeros
+        function formatDouble(value) {
+            let s = value.toPrecision(7);
+            if (s.indexOf('e') === -1) {
+                s = s.replace(/\.?0+$/, '');
+            }
+            return s;
+        }
+
+        // Event listener for form submission
+        document.getElementById('circuitForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get input values
+            const R1 = parseFloat(document.getElementById('R1').value);
+            const R2 = parseFloat(document.getElementById('R2').value);
+            const R3 = parseFloat(document.getElementById('R3').value);
+            const V = 5.0;  // Fixed voltage
+            const tol = 0.05;  // 5% tolerance
+
+            // Calculate minimum and maximum resistance values
+            const R1_min = R1 * (1 - tol);
+            const R1_max = R1 * (1 + tol);
+            const R2_min = R2 * (1 - tol);
+            const R2_max = R2 * (1 + tol);
+            const R3_min = R3 * (1 - tol);
+            const R3_max = R3 * (1 + tol);
+
+            // Function to calculate parallel resistance
+            function parallelResistance(a, b, c) {
+                return 1 / (1/a + 1/b + 1/c);
+            }
+
+            // Calculate total resistance
+            const RT = parallelResistance(R1, R2, R3);
+            const RT_with_Rmin = parallelResistance(R1_min, R2_min, R3_min);
+            const RT_with_Rmax = parallelResistance(R1_max, R2_max, R3_max);
+
+            // Calculate total current
+            const IT = V / RT;
+            const IT_with_Rmin = V / RT_with_Rmin;  // Maximum current
+            const IT_with_Rmax = V / RT_with_Rmax;  // Minimum current
+
+            // Calculate total power
+            const PT = V * IT;
+            const PT_with_Rmin = V * IT_with_Rmin;
+            const PT_with_Rmax = V * IT_with_Rmax;
+
+            // Calculate individual currents
+            const I1 = V / R1;
+            const I2 = V / R2;
+            const I3 = V / R3;
+            const I1_with_Rmin = V / R1_min;  // Maximum current for R1
+            const I2_with_Rmin = V / R2_min;
+            const I3_with_Rmin = V / R3_min;
+            const I1_with_Rmax = V / R1_max;  // Minimum current for R1
+            const I2_with_Rmax = V / R2_max;
+            const I3_with_Rmax = V / R3_max;
+
+            // Calculate individual powers
+            const P1 = V * I1;
+            const P2 = V * I2;
+            const P3 = V * I3;
+            const P1_with_Rmin = V * I1_with_Rmin;
+            const P2_with_Rmin = V * I2_with_Rmin;
+            const P3_with_Rmin = V * I3_with_Rmin;
+            const P1_with_Rmax = V * I1_with_Rmax;
+            const P2_with_Rmax = V * I2_with_Rmax;
+            const P3_with_Rmax = V * I3_with_Rmax;
+
+            // Generate Markdown text
+            let md = `# PARALLEL CIRCUIT\n\n`;
+
+            md += `## [1] GIVEN:\n\n`;
+            md += `$$\nR_1 = ${formatDouble(R1)}\\Omega \\quad R_2 = ${formatDouble(R2)}\\Omega \\quad R_3 = ${formatDouble(R3)}\\Omega\n$$\n\n`;
+            md += `$$\nV = ${formatDouble(V)}V\n$$\n\n`;
+
+            md += `### MINIMUM:\n\n`;
+            md += `$$\nR_{1\\text{min}} = ${formatDouble(R1)}\\Omega - (0.05 \\times ${formatDouble(R1)}\\Omega) = ${formatDouble(R1_min)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{2\\text{min}} = ${formatDouble(R2)}\\Omega - (0.05 \\times ${formatDouble(R2)}\\Omega) = ${formatDouble(R2_min)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{3\\text{min}} = ${formatDouble(R3)}\\Omega - (0.05 \\times ${formatDouble(R3)}\\Omega) = ${formatDouble(R3_min)}\\Omega\n$$\n\n`;
+
+            md += `### MAXIMUM:\n\n`;
+            md += `$$\nR_{1\\text{max}} = ${formatDouble(R1)}\\Omega + (0.05 \\times ${formatDouble(R1)}\\Omega) = ${formatDouble(R1_max)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{2\\text{max}} = ${formatDouble(R2)}\\Omega + (0.05 \\times ${formatDouble(R2)}\\Omega) = ${formatDouble(R2_max)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{3\\text{max}} = ${formatDouble(R3)}\\Omega + (0.05 \\times ${formatDouble(R3)}\\Omega) = ${formatDouble(R3_max)}\\Omega\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [2] REQUIRED:\n\n`;
+            md += `$$\nR_T \\quad I_T \\quad P_T\n$$\n\n`;
+            md += `$$\nI_1 \\quad I_2 \\quad I_3\n$$\n\n`;
+            md += `$$\nP_1 \\quad P_2 \\quad P_3\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [3] FORMULA:\n\n`;
+            md += `$$\n\\frac{1}{R_T} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\frac{1}{R_3}\n$$\n\n`;
+            md += `$$\nI_T = \\frac{V_T}{R_T}\n$$\n\n`;
+            md += `$$\nP_T = I_T \\times V_T\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [4] SOLUTION:\n\n`;
+
+            md += `### SOLVING FOR R<sub>T</sub> (Resistance):\n\n`;
+            md += `$$\nR_T = \\frac{1}{\\frac{1}{R_1} + \\frac{1}{R_2} + \\frac{1}{R_3}}\n$$\n\n`;
+            md += `$$\nR_T = \\frac{1}{\\frac{1}{${formatDouble(R1)}\\Omega} + \\frac{1}{${formatDouble(R2)}\\Omega} + \\frac{1}{${formatDouble(R3)}\\Omega}}\n$$\n\n`;
+            md += `$$\nR_T = ${formatDouble(RT)}\\Omega\n$$\n\n`;
+
+            md += `***R<sub>T</sub> (minimum values):***\n\n`;
+            md += `$$\nR_{T\\text{min}} = \\frac{1}{\\frac{1}{${formatDouble(R1_min)}\\Omega} + \\frac{1}{${formatDouble(R2_min)}\\Omega} + \\frac{1}{${formatDouble(R3_min)}\\Omega}}\n$$\n\n`;
+            md += `$$\nR_{T\\text{min}} = ${formatDouble(RT_with_Rmin)}\\Omega\n$$\n\n`;
+
+            md += `***R<sub>T</sub> (maximum values):***\n\n`;
+            md += `$$\nR_{T\\text{max}} = \\frac{1}{\\frac{1}{${formatDouble(R1_max)}\\Omega} + \\frac{1}{${formatDouble(R2_max)}\\Omega} + \\frac{1}{${formatDouble(R3_max)}\\Omega}}\n$$\n\n`;
+            md += `$$\nR_{T\\text{max}} = ${formatDouble(RT_with_Rmax)}\\Omega\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR I<sub>T</sub> (Current):\n\n`;
+            md += `$$\nI_T = \\frac{V_T}{R_T}\n$$\n\n`;
+            md += `$$\nI_T = \\frac{${formatDouble(V)}V}{${formatDouble(RT)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_T = ${formatDouble(IT)}A\n$$\n\n`;
+
+            md += `***I<sub>Tmin</sub>:***\n\n`;
+            md += `$$\nI_{T\\text{min}} = \\frac{${formatDouble(V)}V}{${formatDouble(RT_with_Rmin)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_{T\\text{min}} = ${formatDouble(IT_with_Rmin)}A\n$$\n\n`;
+
+            md += `***I<sub>Tmax</sub>:***\n\n`;
+            md += `$$\nI_{T\\text{max}} = \\frac{${formatDouble(V)}V}{${formatDouble(RT_with_Rmax)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_{T\\text{max}} = ${formatDouble(IT_with_Rmax)}A\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### CHECKING FOR V<sub>T</sub>:\n\n`;
+            md += `$$\nV_T = I_T \\times R_T\n$$\n\n`;
+            md += `$$\nV_T = ${formatDouble(IT)}A \\times ${formatDouble(RT)}\\Omega\n$$\n\n`;
+            md += `$$\nV_T = ${formatDouble(V)}V\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR I<sub>n </sub> (Individual Current):\n\n`;
+            md += `**NOTE:** V<sub>T</sub> = V<sub>1</sub> = V<sub>2</sub> = V<sub>3</sub> = ${formatDouble(V)}V\n\n`;
+            md += `$$\nI_1 = \\frac{V_1}{R_1} = \\frac{${formatDouble(V)}V}{${formatDouble(R1)}\\Omega} = ${formatDouble(I1)}A\n$$\n\n`;
+            md += `$$\nI_2 = \\frac{V_2}{R_2} = \\frac{${formatDouble(V)}V}{${formatDouble(R2)}\\Omega} = ${formatDouble(I2)}A\n$$\n\n`;
+            md += `$$\nI_3 = \\frac{V_3}{R_3} = \\frac{${formatDouble(V)}V}{${formatDouble(R3)}\\Omega} = ${formatDouble(I3)}A\n$$\n\n`;
+
+            md += `***Total of individual currents:***\n\n`;
+            md += `$$\nI_T = \\sum I_n = I_1 + I_2 + I_3\n$$\n\n`;
+            md += `$$\nI_T = ${formatDouble(I1)}A + ${formatDouble(I2)}A + ${formatDouble(I3)}A\n$$\n\n`;
+            md += `$$\nI_T = ${formatDouble(IT)}A\n$$\n\n`;
+
+            md += `***Individual currents (minimum values):***\n\n`;
+            md += `$$\nI_{1\\text{min}} = \\frac{V}{R_{1\\text{min}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R1_min)}\\Omega} = ${formatDouble(I1_with_Rmin)}A\n$$\n\n`;
+            md += `$$\nI_{2\\text{min}} = \\frac{V}{R_{2\\text{min}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R2_min)}\\Omega} = ${formatDouble(I2_with_Rmin)}A\n$$\n\n`;
+            md += `$$\nI_{3\\text{min}} = \\frac{V}{R_{3\\text{min}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R3_min)}\\Omega} = ${formatDouble(I3_with_Rmin)}A\n$$\n\n`;
+            md += `**CHECKING:**\n\n`;
+            md += `$$\nI_{T\\text{min}} = ${formatDouble(I1_with_Rmin)}A + ${formatDouble(I2_with_Rmin)}A + ${formatDouble(I3_with_Rmin)}A\n$$\n\n`;
+            md += `$$\nI_{T\\text{min}} = ${formatDouble(I1_with_Rmin + I2_with_Rmin + I3_with_Rmin)}A\n$$\n\n`;
+
+            md += `***Individual currents (maximum values):***\n\n`;
+            md += `$$\nI_{1\\text{max}} = \\frac{V}{R_{1\\text{max}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R1_max)}\\Omega} = ${formatDouble(I1_with_Rmax)}A\n$$\n\n`;
+            md += `$$\nI_{2\\text{max}} = \\frac{V}{R_{2\\text{max}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R2_max)}\\Omega} = ${formatDouble(I2_with_Rmax)}A\n$$\n\n`;
+            md += `$$\nI_{3\\text{max}} = \\frac{V}{R_{3\\text{max}}} = \\frac{${formatDouble(V)}V}{${formatDouble(R3_max)}\\Omega} = ${formatDouble(I3_with_Rmax)}A\n$$\n\n`;
+            md += `**CHECKING:**\n\n`;
+            md += `$$\nI_{T\\text{max}} = ${formatDouble(I1_with_Rmax)}A + ${formatDouble(I2_with_Rmax)}A + ${formatDouble(I3_with_Rmax)}A\n$$\n\n`;
+            md += `$$\nI_{T\\text{max}} = ${formatDouble(I1_with_Rmax + I2_with_Rmax + I3_with_Rmax)}A\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR P<sub>T</sub> (Power Consumption):\n\n`;
+            md += `$$\nP_T = I_T \\times V_T\n$$\n\n`;
+            md += `$$\nP_T = ${formatDouble(IT)}A \\times ${formatDouble(V)}V\n$$\n\n`;
+            md += `$$\nP_T = ${formatDouble(PT)}W\n$$\n\n`;
+
+            md += `***P<sub>T</sub> (minimum values):***\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatDouble(IT_with_Rmin)}A \\times ${formatDouble(V)}V = ${formatDouble(PT_with_Rmin)}W\n$$\n\n`;
+
+            md += `***P<sub>T</sub> (maximum values):***\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatDouble(IT_with_Rmax)}A \\times ${formatDouble(V)}V = ${formatDouble(PT_with_Rmax)}W\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR P<sub>n </sub> (Individual Power Consumption):\n\n`;
+            md += `$$\nP_n = V_n \\times I_n\n$$\n\n`;
+
+            md += `***NOMINAL:***\n\n`;
+            md += `$$\nP_1 = ${formatDouble(I1)}A \\times ${formatDouble(V)}V = ${formatDouble(P1)}W\n$$\n\n`;
+            md += `$$\nP_2 = ${formatDouble(I2)}A \\times ${formatDouble(V)}V = ${formatDouble(P2)}W\n$$\n\n`;
+            md += `$$\nP_3 = ${formatDouble(I3)}A \\times ${formatDouble(V)}V = ${formatDouble(P3)}W\n$$\n\n`;
+            md += `$$\nP_T = ${formatDouble(P1)}W + ${formatDouble(P2)}W + ${formatDouble(P3)}W = ${formatDouble(P1 + P2 + P3)}W\n$$\n\n`;
+
+            md += `***Individual power consumption (minimum values):***\n\n`;
+            md += `$$\nP_{1\\text{min}} = ${formatDouble(I1_with_Rmin)}A \\times ${formatDouble(V)}V = ${formatDouble(P1_with_Rmin)}W\n$$\n\n`;
+            md += `$$\nP_{2\\text{min}} = ${formatDouble(I2_with_Rmin)}A \\times ${formatDouble(V)}V = ${formatDouble(P2_with_Rmin)}W\n$$\n\n`;
+            md += `$$\nP_{3\\text{min}} = ${formatDouble(I3_with_Rmin)}A \\times ${formatDouble(V)}V = ${formatDouble(P3_with_Rmin)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatDouble(P1_with_Rmin)}W + ${formatDouble(P2_with_Rmin)}W + ${formatDouble(P3_with_Rmin)}W = ${formatDouble(P1_with_Rmin + P2_with_Rmin + P3_with_Rmin)}W\n$$\n\n`;
+
+            md += `***Individual power consumption (maximum values):***\n\n`;
+            md += `$$\nP_{1\\text{max}} = ${formatDouble(I1_with_Rmax)}A \\times ${formatDouble(V)}V = ${formatDouble(P1_with_Rmax)}W\n$$\n\n`;
+            md += `$$\nP_{2\\text{max}} = ${formatDouble(I2_with_Rmax)}A \\times ${formatDouble(V)}V = ${formatDouble(P2_with_Rmax)}W\n$$\n\n`;
+            md += `$$\nP_{3\\text{max}} = ${formatDouble(I3_with_Rmax)}A \\times ${formatDouble(V)}V = ${formatDouble(P3_with_Rmax)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatDouble(P1_with_Rmax)}W + ${formatDouble(P2_with_Rmax)}W + ${formatDouble(P3_with_Rmax)}W = ${formatDouble(P1_with_Rmax + P2_with_Rmax + P3_with_Rmax)}W\n$$\n`;
+
+            // Render the Markdown to HTML and display it
+            const renderedHtml = marked.parse(md);
+            document.getElementById('mdRendered').innerHTML = renderedHtml;
+            MathJax.typeset();  // Render LaTeX equations
+        });
+    </script>
+</body>
+</html>
