@@ -3,7 +3,7 @@
 ## [1] GIVEN:
 
 $$
-R_1 = 100\Omega \quad R_2 = 320\Omega \quad R_3 = 390\Omega
+R_1 = 100100\Omega \quad R_2 = 320\Omega \quad R_3 = 390\Omega
 $$
 
 $$
@@ -13,7 +13,7 @@ $$
 ### MINIMUM:
 
 $$
-R_{1\text{min}} = 100\Omega - (0.05 \times 100\Omega) = 95\Omega
+R_{1\text{min}} = 100100\Omega - (0.05 \times 100100\Omega) = 95095\Omega
 $$
 
 $$
@@ -27,7 +27,7 @@ $$
 ### MAXIMUM:
 
 $$
-R_{1\text{max}} = 100\Omega + (0.05 \times 100\Omega) = 105\Omega
+R_{1\text{max}} = 100100\Omega + (0.05 \times 100100\Omega) = 105105\Omega
 $$
 
 $$
@@ -81,31 +81,31 @@ R_T = \frac{1}{\frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3}}
 $$
 
 $$
-R_T = \frac{1}{\frac{1}{100\Omega} + \frac{1}{320\Omega} + \frac{1}{390\Omega}}
+R_T = \frac{1}{\frac{1}{100100\Omega} + \frac{1}{320\Omega} + \frac{1}{390\Omega}}
 $$
 
 $$
-R_T = 63.7385086823289\Omega
+R_T = 175.466530329036\Omega
 $$
 
 MINIMUM $R_{T\text{min}}$:
 
 $$
-R_{T\text{min}} = \frac{1}{\frac{1}{95\Omega} + \frac{1}{304\Omega} + \frac{1}{370.5\Omega}}
+R_{T\text{min}} = \frac{1}{\frac{1}{95095\Omega} + \frac{1}{304\Omega} + \frac{1}{370.5\Omega}}
 $$
 
 $$
-R_{T\text{min}} = 60.5515832482125\Omega
+R_{T\text{min}} = 166.693203812584\Omega
 $$
 
 MAXIMUM $R_{T\text{max}}$:
 
 $$
-R_{T\text{max}} = \frac{1}{\frac{1}{105\Omega} + \frac{1}{336\Omega} + \frac{1}{409.5\Omega}}
+R_{T\text{max}} = \frac{1}{\frac{1}{105105\Omega} + \frac{1}{336\Omega} + \frac{1}{409.5\Omega}}
 $$
 
 $$
-R_{T\text{max}} = 66.9254341164453\Omega
+R_{T\text{max}} = 184.239856845488\Omega
 $$
 
 ---
@@ -117,31 +117,31 @@ I_T = \frac{V_T}{R_T}
 $$
 
 $$
-I_T = \frac{5V}{63.7385086823289\Omega}
+I_T = \frac{5V}{175.466530329036\Omega}
 $$
 
 $$
-I_T = 0.0784455128205128A
+I_T = 0.0284954628704629A
 $$
 
 MINIMUM $I_{T\text{min}}$:
 
 $$
-I_{T\text{min}} = \frac{5V}{60.5515832482125\Omega}
+I_{T\text{min}} = \frac{5V}{166.693203812584\Omega}
 $$
 
 $$
-I_{T\text{min}} = 0.0825742240215924A
+I_{T\text{min}} = 0.0299952240741714A
 $$
 
 MAXIMUM $I_{T\text{max}}$:
 
 $$
-I_{T\text{max}} = \frac{5V}{66.9254341164453\Omega}
+I_{T\text{max}} = \frac{5V}{184.239856845488\Omega}
 $$
 
 $$
-I_{T\text{max}} = 0.0747100122100122A
+I_{T\text{max}} = 0.0271385360671075A
 $$
 
 ---
@@ -153,7 +153,7 @@ V_T = I_T \times R_T
 $$
 
 $$
-V_T = 0.0784455128205128A \times 63.7385086823289\Omega
+V_T = 0.0284954628704629A \times 175.466530329036\Omega
 $$
 
 $$
@@ -167,7 +167,7 @@ $$
 **NOTE:** $V_T = V_1 = V_2 = V_3 = 5V$
 
 $$
-I_1 = \frac{V_1}{R_1} = \frac{5V}{100\Omega} = 0.05A
+I_1 = \frac{V_1}{R_1} = \frac{5V}{100100\Omega} = 4.995004995005e-05A
 $$
 
 $$
@@ -185,17 +185,17 @@ I_T = \sum I_n = I_1 + I_2 + I_3
 $$
 
 $$
-I_T = 0.05A + 0.015625A + 0.0128205128205128A
+I_T = 4.995004995005e-05A + 0.015625A + 0.0128205128205128A
 $$
 
 $$
-I_T = 0.0784455128205128A
+I_T = 0.0284954628704629A
 $$
 
 MINIMUM $I_{n\text{min}}$:
 
 $$
-I_{1\text{min}} = \frac{V_1}{R_1} = \frac{5V}{95\Omega} = 0.0526315789473684A
+I_{1\text{min}} = \frac{V_1}{R_1} = \frac{5V}{95095\Omega} = 5.2578999947421e-05A
 $$
 
 $$
@@ -209,17 +209,17 @@ $$
 
 
 $$
-I_{T\text{min}} = 0.0526315789473684A + 0.0164473684210526A + 0.0134952766531714A
+I_{T\text{min}} = 5.2578999947421e-05A + 0.0164473684210526A + 0.0134952766531714A
 $$
 
 $$
-I_{T\text{min}} = 0.0825742240215924A
+I_{T\text{min}} = 0.0299952240741714A
 $$
 
 MAXIMUM $I_{n\text{max}}$:
 
 $$
-I_{1\text{max}} = \frac{V_1}{R_1} = \frac{5V}{105\Omega} = 0.0476190476190476A
+I_{1\text{max}} = \frac{V_1}{R_1} = \frac{5V}{105105\Omega} = 4.75714761429047e-05A
 $$
 
 $$
@@ -233,11 +233,11 @@ $$
 
 
 $$
-I_{T\text{max}} = 0.0476190476190476A + 0.0148809523809524A + 0.0122100122100122A
+I_{T\text{max}} = 4.75714761429047e-05A + 0.0148809523809524A + 0.0122100122100122A
 $$
 
 $$
-I_{T\text{max}} = 0.0747100122100122A
+I_{T\text{max}} = 0.0271385360671075A
 $$
 
 ---
@@ -249,23 +249,23 @@ P_T = I_T \times V_T
 $$
 
 $$
-P_T = 0.0784455128205128A \times 5V
+P_T = 0.0284954628704629A \times 5V
 $$
 
 $$
-P_T = 0.392227564102564W
+P_T = 0.142477314352314W
 $$
 
 MINIMUM $P_{T\text{min}}$:
 
 $$
-P_{T\text{min}} = 0.0825742240215924A \times 5V = 0.412871120107962W
+P_{T\text{min}} = 0.0299952240741714A \times 5V = 0.149976120370857W
 $$
 
 MAXIMUM $P_{T\text{max}}$:
 
 $$
-P_{T\text{max}} = 0.0747100122100122A \times 5V = 0.373550061050061W
+P_{T\text{max}} = 0.0271385360671075A \times 5V = 0.135692680335537W
 $$
 
 ---
@@ -279,7 +279,7 @@ $$
 NOMINAL:
 
 $$
-P_1 = 0.05A \times 5V = 0.25W
+P_1 = 4.995004995005e-05A \times 5V = 0.00024975024975025W
 $$
 
 $$
@@ -293,13 +293,13 @@ $$
 *TOTAL INDIVIDUAL POWER CONSUMPTION:*
 
 $$
-P_T = 0.25W + 0.078125W + 0.0641025641025641W = 0.392227564102564W
+P_T = 0.00024975024975025W + 0.078125W + 0.0641025641025641W = 0.142477314352314W
 $$
 
 MINIMUM $P_{n\text{min}}$:
 
 $$
-P_{1\text{min}} = 0.0526315789473684A \times 5V = 0.263157894736842W
+P_{1\text{min}} = 5.2578999947421e-05A \times 5V = 0.000262894999737105W
 $$
 
 $$
@@ -313,13 +313,13 @@ $$
 *TOTAL MINIMUM INDIVIDUAL POWER CONSUMPTION:*
 
 $$
-P_{T\text{min}} = 0.263157894736842W + 0.0822368421052631W + 0.0674763832658569W = 0.412871120107962W
+P_{T\text{min}} = 0.000262894999737105W + 0.0822368421052631W + 0.0674763832658569W = 0.149976120370857W
 $$
 
 MAXIMUM $P_{n\text{max}}$:
 
 $$
-P_{1\text{max}} = 0.0476190476190476A \times 5V = 0.238095238095238W
+P_{1\text{max}} = 4.75714761429047e-05A \times 5V = 0.000237857380714524W
 $$
 
 $$
@@ -333,5 +333,5 @@ $$
 *TOTAL MAXIMUM INDIVIDUAL POWER CONSUMPTION:*
 
 $$
-P_{T\text{max}} = 0.238095238095238W + 0.0744047619047619W + 0.061050061050061W = 0.373550061050061W
+P_{T\text{max}} = 0.000237857380714524W + 0.0744047619047619W + 0.061050061050061W = 0.135692680335537W
 $$

@@ -290,7 +290,7 @@ int main() {
     char buffer[20];                       
     strftime(buffer, sizeof(buffer), "%Y%m%d_%H", ltm);  
     string date_hour = buffer;             
-    string base = "parallel_circuit_" + date_hour;  
+    string base = "ParCir_Output_" + date_hour;  
     string filename = base + ".md";        
     int counter = 1;                       
     while (fileExists(filename)) {         // If file exists, append counter
