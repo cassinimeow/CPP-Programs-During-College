@@ -1,5 +1,6 @@
 # Ignore all files
 *
+tempCodeRunnerFile.cpp
 
 # Allow folders
 !*/
@@ -7,4 +8,6 @@
 # Allow .cpp files
 !*.cpp
 
-tempCodeRunnerFile.cpp
+# Allow .md files
+!*.md
+
