@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series Circuit Calculator</title>
+    <!-- Include Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Include MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 200px;
+            padding: 10px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 30px;
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        #mdRendered {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            line-height: 1.6;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Series Circuit Calculator</h1>
+    <form id="circuitForm">
+        <label for="R1">R1 (Ohms):</label>
+        <input type="number" id="R1" name="R1" step="any" required><br>
+        <label for="R2">R2 (Ohms):</label>
+        <input type="number" id="R2" name="R2" step="any" required><br>
+        <label for="R3">R3 (Ohms):</label>
+        <input type="number" id="R3" name="R3" step="any" required><br>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="output">
+        <div id="mdRendered"></div>
+    </div>
+    <script>
+        // Function to format numbers, removing unnecessary trailing zeros
+        function formatNumber(value) {
+            return parseFloat(value.toPrecision(12)).toString();
+        }
+
+        document.getElementById('circuitForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get input values
+            const R1 = parseFloat(document.getElementById('R1').value);
+            const R2 = parseFloat(document.getElementById('R2').value);
+            const R3 = parseFloat(document.getElementById('R3').value);
+            const V = 5.0;  // Fixed voltage
+            const tol = 0.05;  // 5% tolerance
+
+            // Calculate minimum and maximum resistance values
+            const R1_min = R1 * (1 - tol);
+            const R1_max = R1 * (1 + tol);
+            const R2_min = R2 * (1 - tol);
+            const R2_max = R2 * (1 + tol);
+            const R3_min = R3 * (1 - tol);
+            const R3_max = R3 * (1 + tol);
+
+            // Calculate total resistance
+            const RT = R1 + R2 + R3;
+            const RT_min = R1_min + R2_min + R3_min;  // Minimum total resistance
+            const RT_max = R1_max + R2_max + R3_max;  // Maximum total resistance
+
+            // Calculate total current
+            const IT = V / RT;
+            const IT_min = V / RT_min;  // Min current with max resistance
+            const IT_max = V / RT_max;  // Max current with min resistance
+
+            // Calculate individual voltage drops
+            const V1 = IT * R1;
+            const V2 = IT * R2;
+            const V3 = IT * R3;
+            const V1_min = IT_min * R1_min;  // Min voltage with min current (corrected)
+            const V2_min = IT_min * R2_min;
+            const V3_min = IT_min * R3_min;
+            const V1_max = IT_max * R1_max;  // Max voltage with max current (corrected)
+            const V2_max = IT_max * R2_max;
+            const V3_max = IT_max * R3_max;
+
+            // Calculate total power
+            const PT = IT * V;
+            const PT_min = IT_min * V;  // Min power with min current (corrected)
+            const PT_max = IT_max * V;  // Max power with max current (corrected)
+
+            // Calculate individual power consumption
+            const P1 = IT * V1;
+            const P2 = IT * V2;
+            const P3 = IT * V3;
+            const P1_min = IT_min * V1_min;  // Min power with min current and voltage (corrected)
+            const P2_min = IT_min * V2_min;
+            const P3_min = IT_min * V3_min;
+            const P1_max = IT_max * V1_max;  // Max power with max current and voltage (corrected)
+            const P2_max = IT_max * V2_max;
+            const P3_max = IT_max * V3_max;
+
+            // Generate Markdown text
+            let md = `# SERIES CIRCUIT\n\n`;
+
+            md += `## [1] GIVEN:\n\n`;
+            md += `$$\nR_1 = ${formatNumber(R1)}\\Omega \\quad R_2 = ${formatNumber(R2)}\\Omega \\quad R_3 = ${formatNumber(R3)}\\Omega\n$$\n\n`;
+            md += `$$\nV = ${formatNumber(V)}V\n$$\n\n`;
+
+            md += `MINIMUM RESISTANCES:\n\n`;
+            md += `$$\nR_{1\\text{min}} = ${formatNumber(R1)}\\Omega - (0.05 \\times ${formatNumber(R1)}\\Omega) = ${formatNumber(R1_min)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{2\\text{min}} = ${formatNumber(R2)}\\Omega - (0.05 \\times ${formatNumber(R2)}\\Omega) = ${formatNumber(R2_min)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{3\\text{min}} = ${formatNumber(R3)}\\Omega - (0.05 \\times ${formatNumber(R3)}\\Omega) = ${formatNumber(R3_min)}\\Omega\n$$\n\n`;
+
+            md += `MAXIMUM RESISTANCES:\n\n`;
+            md += `$$\nR_{1\\text{max}} = ${formatNumber(R1)}\\Omega + (0.05 \\times ${formatNumber(R1)}\\Omega) = ${formatNumber(R1_max)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{2\\text{max}} = ${formatNumber(R2)}\\Omega + (0.05 \\times ${formatNumber(R2)}\\Omega) = ${formatNumber(R2_max)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{3\\text{max}} = ${formatNumber(R3)}\\Omega + (0.05 \\times ${formatNumber(R3)}\\Omega) = ${formatNumber(R3_max)}\\Omega\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [2] REQUIRED:\n\n`;
+            md += `$$\nR_T \\quad I_T \\quad V_T \\quad P_T\n$$\n\n`;
+            md += `$$\nV_1 \\quad V_2 \\quad V_3\n$$\n\n`;
+            md += `$$\nP_1 \\quad P_2 \\quad P_3\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [3] FORMULA:\n\n`;
+            md += `$$\nR_T = \\sum R_n\n$$\n\n`;
+            md += `$$\nI = \\frac{V}{R}\n$$\n\n`;
+            md += `$$\nV = I \\times R\n$$\n\n`;
+            md += `$$\nP = I \\times V\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `## [4] SOLUTION:\n\n`;
+
+            md += `### SOLVING FOR R<sub>T</sub> (Total Resistance):\n\n`;
+            md += `$$\nR_T = \\sum R_n = R_1 + R_2 + R_3\n$$\n\n`;
+            md += `$$\nR_T = ${formatNumber(R1)}\\Omega + ${formatNumber(R2)}\\Omega + ${formatNumber(R3)}\\Omega\n$$\n\n`;
+            md += `$$\nR_T = ${formatNumber(RT)}\\Omega\n$$\n\n`;
+
+            md += `##### R<sub>Tmin</sub> (Total Min Resistance):\n\n`;
+            md += `$$\nR_{T\\text{min}} = ${formatNumber(R1_min)}\\Omega + ${formatNumber(R2_min)}\\Omega + ${formatNumber(R3_min)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{T\\text{min}} = ${formatNumber(RT_min)}\\Omega\n$$\n\n`;
+
+            md += `##### R<sub>Tmax</sub> (Total Max Resistance):\n\n`;
+            md += `$$\nR_{T\\text{max}} = ${formatNumber(R1_max)}\\Omega + ${formatNumber(R2_max)}\\Omega + ${formatNumber(R3_max)}\\Omega\n$$\n\n`;
+            md += `$$\nR_{T\\text{max}} = ${formatNumber(RT_max)}\\Omega\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR I<sub>T</sub> (Total Current):\n\n`;
+            md += `$$\nI_T = \\frac{V_T}{R_T}\n$$\n\n`;
+            md += `$$\nI_T = \\frac{${formatNumber(V)}V}{${formatNumber(RT)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_T = ${formatNumber(IT)}A\n$$\n\n`;
+
+            md += `##### I<sub>Tmin</sub> (Min Total Current):\n\n`;
+            md += `$$\nI_{T\\text{min}} = \\frac{V_T}{R_T}\n$$\n\n`;
+            md += `$$\nI_{T\\text{min}} = \\frac{${formatNumber(V)}V}{${formatNumber(RT_min)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_{T\\text{min}} = ${formatNumber(IT_min)}A\n$$\n\n`;
+
+            md += `##### I<sub>Tmax</sub> (Max Total Current):\n\n`;
+            md += `$$\nI_{T\\text{max}} = \\frac{V_T}{R_T}\n$$\n\n`;
+            md += `$$\nI_{T\\text{max}} = \\frac{${formatNumber(V)}V}{${formatNumber(RT_max)}\\Omega}\n$$\n\n`;
+            md += `$$\nI_{T\\text{max}} = ${formatNumber(IT_max)}A\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR V<sub>T</sub> (Total Voltage):\n\n`;
+            md += `$$\nV_T = I_T \\times R_T\n$$\n\n`;
+            md += `$$\nV_T = ${formatNumber(IT)}A \\times ${formatNumber(RT)}\\Omega\n$$\n\n`;
+            md += `$$\nV_T = ${formatNumber(V)}V\n$$\n\n`;
+
+            md += `##### V<sub>Tmin</sub> (Min Total Voltage):\n\n`;
+            md += `$$\nV_{T\\text{min}} = I_T \\times R_T\n$$\n\n`;
+            md += `$$\nV_{T\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(RT_min)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{T\\text{min}} = ${formatNumber(IT_min * RT_min)}V\n$$\n\n`;
+
+            md += `##### V<sub>Tmax</sub> (Max Total Voltage):\n\n`;
+            md += `$$\nV_{T\\text{max}} = I_T \\times R_T\n$$\n\n`;
+            md += `$$\nV_{T\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(RT_max)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{T\\text{max}} = ${formatNumber(IT_max * RT_max)}V\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR P<sub>T</sub> (Total Power Consumption):\n\n`;
+            md += `$$\nP_T = I_T \\times V_T\n$$\n\n`;
+            md += `$$\nP_T = ${formatNumber(IT)}A \\times ${formatNumber(V)}V\n$$\n\n`;
+            md += `$$\nP_T = ${formatNumber(PT)}W\n$$\n\n`;
+
+            md += `##### P<sub>Tmin</sub> (Min Total Power Consumption):\n\n`;
+            md += `$$\nP_{T\\text{min}} = I_T \\times V_T\n$$\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(V)}V\n$$\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatNumber(PT_min)}W\n$$\n\n`;
+
+            md += `##### P<sub>Tmax</sub> (Max Total Power Consumption):\n\n`;
+            md += `$$\nP_{T\\text{max}} = I_T \\times V_T\n$$\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(V)}V\n$$\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatNumber(PT_max)}W\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR V<sub>n</sub> (Individual Voltage Drop):\n\n`;
+            md += `$$\nV_n = I_T \\times R_n\n$$\n\n`;
+            md += `$$\nV_1 = ${formatNumber(IT)}A \\times ${formatNumber(R1)}\\Omega\n$$\n\n`;
+            md += `$$\nV_1 = ${formatNumber(V1)}V\n$$\n\n`;
+            md += `$$\nV_2 = ${formatNumber(IT)}A \\times ${formatNumber(R2)}\\Omega\n$$\n\n`;
+            md += `$$\nV_2 = ${formatNumber(V2)}V\n$$\n\n`;
+            md += `$$\nV_3 = ${formatNumber(IT)}A \\times ${formatNumber(R3)}\\Omega\n$$\n\n`;
+            md += `$$\nV_3 = ${formatNumber(V3)}V\n$$\n\n`;
+
+            md += `***Total of individual voltage drops:***\n\n`;
+            md += `$$\nV_T = \\sum V_n = V_1 + V_2 + V_3\n$$\n\n`;
+            md += `$$\nV_T = ${formatNumber(V1)}V + ${formatNumber(V2)}V + ${formatNumber(V3)}V\n$$\n\n`;
+            md += `$$\nV_T = ${formatNumber(V1 + V2 + V3)}V\n$$\n\n`;
+
+            md += `##### V<sub>nmin</sub> (Min Individual Voltage Drop):\n\n`;
+            md += `$$\nV_{1\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(R1_min)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{1\\text{min}} = ${formatNumber(V1_min)}V\n$$\n\n`;
+            md += `$$\nV_{2\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(R2_min)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{2\\text{min}} = ${formatNumber(V2_min)}V\n$$\n\n`;
+            md += `$$\nV_{3\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(R3_min)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{3\\text{min}} = ${formatNumber(V3_min)}V\n$$\n\n`;
+            md += `$$\nV_{T\\text{min}} = ${formatNumber(V1_min)}V + ${formatNumber(V2_min)}V + ${formatNumber(V3_min)}V\n$$\n\n`;
+            md += `$$\nV_{T\\text{min}} = ${formatNumber(V1_min + V2_min + V3_min)}V\n$$\n\n`;
+
+            md += `##### V<sub>nmax</sub> (Max Individual Voltage Drop):\n\n`;
+            md += `$$\nV_{1\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(R1_max)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{1\\text{max}} = ${formatNumber(V1_max)}V\n$$\n\n`;
+            md += `$$\nV_{2\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(R2_max)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{2\\text{max}} = ${formatNumber(V2_max)}V\n$$\n\n`;
+            md += `$$\nV_{3\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(R3_max)}\\Omega\n$$\n\n`;
+            md += `$$\nV_{3\\text{max}} = ${formatNumber(V3_max)}V\n$$\n\n`;
+            md += `$$\nV_{T\\text{max}} = ${formatNumber(V1_max)}V + ${formatNumber(V2_max)}V + ${formatNumber(V3_max)}V\n$$\n\n`;
+            md += `$$\nV_{T\\text{max}} = ${formatNumber(V1_max + V2_max + V3_max)}V\n$$\n\n`;
+
+            md += `---\n\n`;
+
+            md += `### SOLVING FOR P<sub>n</sub> (Individual Power Consumption):\n\n`;
+            md += `$$\nP_n = I_T \\times V_n\n$$\n\n`;
+            md += `$$\nP_1 = ${formatNumber(IT)}A \\times ${formatNumber(V1)}V\n$$\n\n`;
+            md += `$$\nP_1 = ${formatNumber(P1)}W\n$$\n\n`;
+            md += `$$\nP_2 = ${formatNumber(IT)}A \\times ${formatNumber(V2)}V\n$$\n\n`;
+            md += `$$\nP_2 = ${formatNumber(P2)}W\n$$\n\n`;
+            md += `$$\nP_3 = ${formatNumber(IT)}A \\times ${formatNumber(V3)}V\n$$\n\n`;
+            md += `$$\nP_3 = ${formatNumber(P3)}W\n$$\n\n`;
+
+            md += `***Total of individual power consumption:***\n\n`;
+            md += `$$\nP_T = \\sum P_n = P_1 + P_2 + P_3\n$$\n\n`;
+            md += `$$\nP_T = ${formatNumber(P1)}W + ${formatNumber(P2)}W + ${formatNumber(P3)}W\n$$\n\n`;
+            md += `$$\nP_T = ${formatNumber(P1 + P2 + P3)}W\n$$\n\n`;
+
+            md += `##### P<sub>nmin</sub> (Min Individual Power Consumption):\n\n`;
+            md += `$$\nP_{1\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(V1_min)}V\n$$\n\n`;
+            md += `$$\nP_{1\\text{min}} = ${formatNumber(P1_min)}W\n$$\n\n`;
+            md += `$$\nP_{2\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(V2_min)}V\n$$\n\n`;
+            md += `$$\nP_{2\\text{min}} = ${formatNumber(P2_min)}W\n$$\n\n`;
+            md += `$$\nP_{3\\text{min}} = ${formatNumber(IT_min)}A \\times ${formatNumber(V3_min)}V\n$$\n\n`;
+            md += `$$\nP_{3\\text{min}} = ${formatNumber(P3_min)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatNumber(P1_min)}W + ${formatNumber(P2_min)}W + ${formatNumber(P3_min)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{min}} = ${formatNumber(P1_min + P2_min + P3_min)}W\n$$\n\n`;
+
+            md += `##### P<sub>nmax</sub> (Max Individual Power Consumption):\n\n`;
+            md += `$$\nP_{1\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(V1_max)}V\n$$\n\n`;
+            md += `$$\nP_{1\\text{max}} = ${formatNumber(P1_max)}W\n$$\n\n`;
+            md += `$$\nP_{2\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(V2_max)}V\n$$\n\n`;
+            md += `$$\nP_{2\\text{max}} = ${formatNumber(P2_max)}W\n$$\n\n`;
+            md += `$$\nP_{3\\text{max}} = ${formatNumber(IT_max)}A \\times ${formatNumber(V3_max)}V\n$$\n\n`;
+            md += `$$\nP_{3\\text{max}} = ${formatNumber(P3_max)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatNumber(P1_max)}W + ${formatNumber(P2_max)}W + ${formatNumber(P3_max)}W\n$$\n\n`;
+            md += `$$\nP_{T\\text{max}} = ${formatNumber(P1_max + P2_max + P3_max)}W\n$$\n\n`;
+
+            // Render the Markdown to HTML and display it
+            const renderedHtml = marked.parse(md);
+            document.getElementById('mdRendered').innerHTML = renderedHtml;
+            MathJax.typeset();  // Render LaTeX equations
+        });
+    </script>
+</body>
+</html>
