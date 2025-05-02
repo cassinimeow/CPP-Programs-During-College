@@ -11,7 +11,7 @@ void sumOfArray() {
         sum1 += num1[i];
     }
     cout << "Sum of numbers of an array: " << sum1;
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 3️⃣ Calculate average value of an array elements
@@ -26,6 +26,7 @@ void averageOfArray() {
         count++;
     }
     cout << "\n\nAverage value of an array elements: " << sum2 / count;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 4️⃣ Array of Cars
@@ -33,9 +34,10 @@ void displayCars() {
     cout << "\n\nProblem 4: Array of Cars\n" << endl;
     string car[] = {"Toyota", "Honda", "Nissan", "Mazda", "Suzuki"};
     for (int i = 0; i < 5; i++) {
-        cout << car[i] << " ";
+        cout << car[i] << endl;
     }
-}
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
+}   
 
 // 5️⃣ Find the biggest Number in Two-Dimensional Array
 void findBiggestIn2D() {
@@ -57,7 +59,7 @@ void findBiggestIn2D() {
     }
 
     cout << "\nThe largest number is: " << maxNum << endl;
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 6️⃣ Find your number in a List
@@ -89,7 +91,7 @@ void findNumberInList() {
         cout << "\nNumber " << searchNum << " was not found in the list" << endl;
     }
 
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 7️⃣ Determine the Smallest and Biggest Numbers
@@ -118,7 +120,7 @@ void smallestAndBiggest() {
     cout << "\nLargest number: " << maxNum << endl;
     cout << "Smallest number: " << minNum << endl;
 
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 8️⃣ Count the number of Occurrence
@@ -146,7 +148,7 @@ void countOccurrences() {
     }
 
     cout << "\nThe number " << targetNum << " occurs " << count << " times." << endl;
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 9️⃣ Determine the 2nd Highest Number
@@ -175,7 +177,7 @@ void secondHighest() {
 
     cout << "\nMaximum number: " << maxNum << endl;
     cout << "Second-highest number: " << secondMax << endl;
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 }
 
 // 🔟 Sales Report from January to December in CJ Marketing Incorporated
@@ -213,16 +215,29 @@ void salesReport() {
 
     cout << "\nHighest month of sales: " << highMonth << " with sales of " << highest << endl;
     cout << "Lowest month of sales: " << lowMonth << " with sales of " << lowest << endl;
-    cout << "\nProgrammer's Name: Elizander S. Aguila" << endl;
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila\n" << endl;
 }
 
 int main() {
-    // 1️⃣ Display numbers using array (left inside main as requested)
-    int num[] = {1, 2, 3, 4, 5};
-    cout << "\n\nProblem 1: Display numbers using array" << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << num[i] << " ";
+    // 1️⃣ Sort numbers and strings
+    cout << "\nProblem 1: Sort numbers and strings\n" << endl;
+    int num[] = {64, 34, 25, 12, 22, 11, 90};
+    string str[] = {"dog", "cat", "apple", "banana", "elephant"};
+    for (int i = 0; i < 7; i++) {
+        for (int j = i + 1; j < 7; j++) {
+            if (num[i] > num[j]) swap(num[i], num[j]);
+        }
     }
+    for (int i = 0; i < 5; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            if (str[i] > str[j]) swap(str[i], str[j]);
+        }
+    }
+    cout << "Sorted numbers: ";
+    for (int i = 0; i < 7; i++) cout << num[i] << " ";
+    cout << "\nSorted strings: ";
+    for (int i = 0; i < 5; i++) cout << str[i] << " ";
+    cout << "\n\nProgrammer's Name: Elizander S. Aguila" << endl;
 
     // Call each function
     sumOfArray();             // 2️⃣
