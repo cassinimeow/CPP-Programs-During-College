@@ -1,6 +1,8 @@
 {
   "files.associations": {
     "ostream": "cpp",
-    "iostream": "cpp"
-  }
+    "iostream": "cpp",
+    "charconv": "cpp"
+  },
+  "git.decorations.enabled": false
 }
