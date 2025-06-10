@@ -2,7 +2,22 @@
   "files.associations": {
     "ostream": "cpp",
     "iostream": "cpp",
-    "charconv": "cpp"
+    "charconv": "cpp",
+    "bitset": "cpp",
+    "chrono": "cpp",
+    "cstring": "cpp",
+    "string": "cpp",
+    "string_view": "cpp",
+    "format": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp",
+    "istream": "cpp",
+    "sstream": "cpp",
+    "stdexcept": "cpp",
+    "system_error": "cpp",
+    "typeinfo": "cpp",
+    "variant": "cpp",
+    "*.inc": "cpp"
   },
   "git.decorations.enabled": false
 }
